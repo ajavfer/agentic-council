@@ -48,9 +48,12 @@ Environment Setup:
     GEMINI_MODEL_BASIC=gemini-3.7-flash   # Optional override
 
 Usage:
-    $ python council_adk.py "Should we pivot our enterprise AI strategy?"
-    $ python council_adk.py "Evaluate this proposal" --file proposal.pdf --output my_adk_report.md
-    $ python council_adk.py "Critique this plan" --model gemini-3.5-flash
+    Run these commands from the project root. Reports are saved in
+    council/reports/ with a timestamp appended to the requested filename.
+
+    $ python council/council_adk.py "Should we pivot our enterprise AI strategy?"
+    $ python council/council_adk.py "Evaluate this proposal" --file proposal.pdf --output my_adk_report.md
+    $ python council/council_adk.py "Critique this plan" --model gemini-3.5-flash
 """
 
 import os
@@ -88,12 +91,9 @@ from google.genai import types
 
 # Priority fallback sequence when models experience 503/429 spikes
 FALLBACK_CASCADE = [
-    "gemini-3.8-flash",
-    "gemini-3.7-flash",
     "gemini-3.6-flash",
-    "gemini-3.5-flash",
     "gemini-3.5-flash-lite",
-    "gemini-2.5-flash",
+    "gemini-3.1-flash-lite",
 ]
 
 

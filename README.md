@@ -80,7 +80,7 @@ Create a `.env` file in the project root:
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key
-GEMINI_MODEL_BASIC=gemini-3.7-flash
+GEMINI_MODEL_BASIC=gemini-3.8-flash
 ```
 
 This file is loaded automatically by the scripts using `python-dotenv`.
@@ -106,7 +106,7 @@ python council/council_adk.py "Evaluate this proposal" --file proposal.pdf --out
 ```
 
 ```bash
-python council/council_adk.py "Critique this plan" --model gemini-3.5-flash
+python council/council_adk.py "Critique this plan" --model gemini-4-carbon
 ```
 
 ---
