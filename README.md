@@ -12,7 +12,7 @@ Built as an open-source technical reference for [HUMXUS](https://www.humxus.com)
 
 ## Architecture
 
-`council/council.py` is a high-throughput, rate-limit-conscious pipeline built on `google-genai` and `asyncio.gather`. It features typed Pydantic output schemas and an automatic multi-model failover cascade to protect against transient 503 and 429 errors.
+`council.py` is a high-throughput, rate-limit-conscious pipeline built on `google-genai` and `asyncio.gather`. It features typed Pydantic output schemas and an automatic multi-model failover cascade to protect against transient 503 and 429 errors.
 
 ---
 
@@ -22,9 +22,11 @@ Built as an open-source technical reference for [HUMXUS](https://www.humxus.com)
 agentic-council/
 ├── README.md
 ├── requirements.txt
+├── .env.example           # Template for environment variables
 ├── .gitignore
-└── council/
-    └── council.py          # Async pipeline with Pydantic schemas & failover
+├── council.py              # Async pipeline with Pydantic schemas & failover
+├── tests/                  # Pytest suite (no API calls required)
+└── reports/                # Generated council reports (gitignored)
 ```
 
 ---
@@ -43,7 +45,7 @@ pip install -r requirements.txt
 
 ## Environment Setup
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root (or copy `.env.example`):
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
@@ -54,22 +56,22 @@ GEMINI_MODEL_BASIC=gemini-3.8-flash
 
 ## Usage
 
-The script supports analyzing text prompts directly or extracting context from attached documents (`.pdf`, `.docx`, `.txt`, `.md`). Reports are automatically saved to `council/reports/`.
+The script supports analyzing text prompts directly or extracting context from attached documents (`.pdf`, `.docx`, `.txt`, `.md`). Reports are automatically saved to `reports/`.
 
 ```bash
 # Basic evaluation prompt
-python council/council.py "Should we open-source our core proprietary algorithms?"
+python council.py "Should we open-source our core proprietary algorithms?"
 
 # Evaluating an attached document
-python council/council.py "Evaluate this product roadmap" --file proposal.pdf --output roadmap_review.md
+python council.py "Evaluate this product roadmap" --file proposal.pdf --output roadmap_review.md
 
 # Specifying an alternative model
-python council/council.py "Critique our enterprise pricing strategy" --model gemini-3.6-flash
+python council.py "Critique our enterprise pricing strategy" --model gemini-3.6-flash
 ```
 
 ### Supported Models
 
-- `gemini-3.8-flash` (Default — optimized for agents and complex reasoning)
+- `gemini-3.8-flash` (Default: optimized for agents and complex reasoning)
 - `gemini-4-hydrogen` (Flagship frontier reasoning)
 - `gemini-3.6-flash` (Balanced multi-modal and general agentic tasks)
 - `gemini-3.5-flash-lite` (High-throughput execution)
@@ -94,6 +96,16 @@ Generated reports follow an executive-ready structure:
 - **Chairman's Evaluation & Consensus:** Clear breakdown of common ground and critical unresolved clashes.
 - **Definitive Recommendation:** Decisive strategic direction (rejecting vague compromise).
 - **Actionable Next Steps:** Prioritized 3-to-5 step implementation roadmap.
+
+---
+
+## Testing
+
+The test suite in `tests/` covers file extraction, the model fallback cascade, and output schema validation. No Gemini API key or network access required.
+
+```bash
+python -m pytest tests/ -v
+```
 
 ---
 

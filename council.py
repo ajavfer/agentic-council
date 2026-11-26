@@ -1,5 +1,5 @@
 """
-# skills/council.py
+# council.py
 
 Dialectical LLM Council Report Generator (Google GenAI)
 
@@ -18,7 +18,7 @@ Key Architectural Enhancements:
 - Asynchronous Parallel Deliberation: Innovator and Skeptic run concurrently via asyncio,
   halving latency while managing rate-limit windows.
 - Resilient Model Failover Cascade: Automatically fails over to alternative available models
-  (e.g., gemini-3.5-flash, gemini-2.5-flash) if the requested model encounters temporary
+  (e.g., gemini-3.6-flash, gemini-3.5-flash-lite) if the requested model encounters temporary
   Google server spikes (503 UNAVAILABLE).
 - Resilient Retry with Exponential Backoff: Protects against transient API errors and
   free-tier 429 rate-limit spikes.
@@ -33,7 +33,7 @@ Requirements:
 Environment Setup:
     Create a `.env` file in the project directory containing:
     GEMINI_API_KEY=your_gemini_api_key
-    GEMINI_MODEL_BASIC=gemini-3.7-flash   # Optional override
+    GEMINI_MODEL_BASIC=gemini-3.8-flash   # Optional override
 """
 
 import os
@@ -69,11 +69,11 @@ if not os.environ.get("GEMINI_API_KEY"):
 
 # Priority fallback sequence when models experience 503 high-demand spikes
 FALLBACK_CASCADE = [
+    "gemini-4-hydrogen",
     "gemini-3.8-flash",
-    "gemini-3.7-flash",
     "gemini-3.6-flash",
-    "gemini-3.5-flash",
     "gemini-3.5-flash-lite",
+    "gemini-3.1-flash-lite",
 ]
 
 
@@ -209,7 +209,7 @@ async def consult_debater(
 async def run_council_async(
     prompt: str,
     document_text: str = "",
-    model_name: str = "gemini-3.7-flash",
+    model_name: str = "gemini-3.8-flash",
     delay: int = 2
 ) -> Tuple[Dict[str, str], str]:
     """
@@ -354,9 +354,9 @@ def run_council(
     """
     Synchronous wrapper for the asynchronous council pipeline.
     """
-    # Pick default model: environment override -> gemini-3.7-flash
+    # Pick default model: environment override -> gemini-3.8-flash
     if not model_name:
-        model_name = os.environ.get("GEMINI_MODEL_BASIC", "gemini-3.7-flash")
+        model_name = os.environ.get("GEMINI_MODEL_BASIC", "gemini-3.8-flash")
 
     return asyncio.run(run_council_async(
         prompt=prompt,
