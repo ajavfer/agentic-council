@@ -1,7 +1,7 @@
 """
 # skills/council.py
 
-Dialectical LLM Council Report Generator (Optimized with Google ADK / GenAI Architecture)
+Dialectical LLM Council Report Generator (Google GenAI)
 
 This script orchestrates a rate-limit-friendly multi-agent dialectical pipeline.
 By applying Occam's Razor to multi-agent deliberation, this architecture condenses
@@ -367,19 +367,18 @@ def run_council(
 
 
 def main():
-    default_model = os.environ.get("GEMINI_MODEL_BASIC", "gemini-3.7-flash")
+    default_model = os.environ.get("GEMINI_MODEL_BASIC", "gemini-3.8-flash")
 
-    parser = argparse.ArgumentParser(description="Dialectical Multi-Agent LLM Council (Google ADK & GenAI)")
+    parser = argparse.ArgumentParser(description="Dialectical Multi-Agent LLM Council (Google GenAI)")
     parser.add_argument("prompt", nargs="?", type=str, default="", help="The main prompt, task, or question for the council.")
     parser.add_argument("--file", type=str, default=None, help="Optional path to a .pdf, .docx, or .md/.txt file to extract context.")
     parser.add_argument("--model", type=str, default=default_model,
                         choices=[
+                            "gemini-4-hydrogen",
                             "gemini-3.8-flash",
-                            "gemini-3.7-flash",
-                            "gemini-3.5-flash",
+                            "gemini-3.6-flash",
                             "gemini-3.5-flash-lite",
-                            "gemini-2.5-flash",
-                            "gemini-2.5-flash-lite",
+                            "gemini-3.1-flash-lite",
                         ],
                         help=f"Gemini model to use (default: {default_model}).")
     parser.add_argument("--delay", type=int, default=2,

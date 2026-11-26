@@ -1,9 +1,6 @@
-# Minimal runtime dependencies for the dialectical council
+# Minimal runtime dependencies for the agentic council
 python-dotenv
 pydantic
-
-google-adk
 google-genai
-
 pypdf
 python-docx

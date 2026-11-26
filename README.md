@@ -1,164 +1,102 @@
-# Dialectical LLM Council
+# Agentic Council: Dialectical Multi-Agent Deliberation
 
-A lightweight, structured multi-agent evaluation framework that turns a prompt or document into a debate-driven executive report.
+A structured, multi-agent evaluation framework that stress-tests strategic proposals, investment theses, and technical architectures through polarized dialectical debate.
 
-This workspace contains a 3-role council system:
+Built as an open-source technical reference for [HUMXUS](https://www.humxus.com), Agentic Council demonstrates how to replace unstructured chat with a bounded 3-agent deliberation loop:
 
-- Strategic Innovator — explores opportunity, vision, and upside
-- Pragmatic Skeptic — challenges assumptions, risks, and execution gaps
-- Executive Chairman — synthesizes both sides into a final recommendation and action plan
-
-The project includes two implementations:
-
-- `council/council.py` — asynchronous GenAI pipeline with model fallback support
-- `council/council_adk.py` — Google ADK workflow using parallel LLM agents
+1. **The Strategic Innovator (*Thesis*):** Explores theoretical potential, first-principles upside, market hypotheses, and scaling opportunities.
+2. **The Pragmatic Skeptic (*Antithesis*):** Scrutinizes unit economics, operational risks, validation gaps, and over-engineering.
+3. **The Executive Chairman (*Synthesis*):** Impartially identifies areas of agreement, highlights critical blind spots, and prescribes a definitive decision with a prioritized 3-to-5 step roadmap.
 
 ---
 
-## Project purpose
+## Architecture
 
-The council is designed for evaluating:
-
-- business proposals
-- strategic plans
-- technical decisions
-- product directions
-- documents that need critique and synthesis
-
-It is especially useful when you want a structured opinion combining:
-
-1. optimism and opportunity framing
-2. contrarian risk analysis
-3. a decisive executive recommendation
+`council/council.py` is a high-throughput, rate-limit-conscious pipeline built on `google-genai` and `asyncio.gather`. It features typed Pydantic output schemas and an automatic multi-model failover cascade to protect against transient 503 and 429 errors.
 
 ---
 
-## Repository structure
+## Repository Structure
 
 ```text
-My_skills/
+agentic-council/
 ├── README.md
 ├── requirements.txt
-├── my_report.md
-├── my_adk_report.md
-├── test_adk.md
-├── council/
-│   ├── SKILL.md
-│   ├── council.py
-│   └── council_adk.py
-└── .venv/   (local virtual environment)
+├── .gitignore
+└── council/
+    └── council.py          # Async pipeline with Pydantic schemas & failover
 ```
 
 ---
 
-## Requirements
-
-The project uses a minimal dependency set:
-
-```txt
-python-dotenv
-pydantic
-
-google-adk
-google-genai
-
-pypdf
-python-docx
-```
-
-Install them with:
+## Installation
 
 ```bash
+git clone https://github.com/ajavfer/agentic-council.git
+cd agentic-council
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
 ---
 
-## Environment setup
+## Environment Setup
 
 Create a `.env` file in the project root:
 
 ```env
-GEMINI_API_KEY=your_gemini_api_key
+GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL_BASIC=gemini-3.8-flash
 ```
-
-This file is loaded automatically by the scripts using `python-dotenv`.
 
 ---
 
 ## Usage
 
-### 1. Async council pipeline
+The script supports analyzing text prompts directly or extracting context from attached documents (`.pdf`, `.docx`, `.txt`, `.md`). Reports are automatically saved to `council/reports/`.
 
 ```bash
-python council/council.py "Evaluate this proposal" --file proposal.pdf --output my_report.md
+# Basic evaluation prompt
+python council/council.py "Should we open-source our core proprietary algorithms?"
+
+# Evaluating an attached document
+python council/council.py "Evaluate this product roadmap" --file proposal.pdf --output roadmap_review.md
+
+# Specifying an alternative model
+python council/council.py "Critique our enterprise pricing strategy" --model gemini-3.6-flash
 ```
 
-### 2. Google ADK workflow
+### Supported Models
 
-```bash
-python council/council_adk.py "Should we pivot our AI strategy?"
-```
-
-```bash
-python council/council_adk.py "Evaluate this proposal" --file proposal.pdf --output my_adk_report.md
-```
-
-```bash
-python council/council_adk.py "Critique this plan" --model gemini-4-carbon
-```
+- `gemini-3.8-flash` (Default — optimized for agents and complex reasoning)
+- `gemini-4-hydrogen` (Flagship frontier reasoning)
+- `gemini-3.6-flash` (Balanced multi-modal and general agentic tasks)
+- `gemini-3.5-flash-lite` (High-throughput execution)
+- `gemini-3.1-flash-lite` (Cost-efficient lightweight execution)
 
 ---
 
-## Supported input formats
+## Supported Context Formats
 
-The scripts can process:
-
-- `.md`
-- `.txt`
-- `.pdf`
-- `.docx`
-
-This makes it easy to evaluate existing strategy notes, reports, and proposal documents.
+- Markdown & Plain Text: `.md`, `.txt`
+- PDF Documents: `.pdf` (via `pypdf`)
+- Word Documents: `.docx` (via `python-docx`)
 
 ---
 
-## Output format
+## Report Structure
 
-The generated reports are markdown-based and include sections such as:
+Generated reports follow an executive-ready structure:
 
-- original objective and context
-- strategic innovator perspective
-- pragmatic skeptic perspective
-- executive synthesis
-- decision and action roadmap
-
-Examples in this workspace include:
-
-- `my_report.md`
-- `my_adk_report.md`
+- **Original Objective & Context:** Plain-language problem statement.
+- **Divergent Perspectives:** Summary of the Innovator's upside case versus the Skeptic's risk analysis.
+- **Chairman's Evaluation & Consensus:** Clear breakdown of common ground and critical unresolved clashes.
+- **Definitive Recommendation:** Decisive strategic direction (rejecting vague compromise).
+- **Actionable Next Steps:** Prioritized 3-to-5 step implementation roadmap.
 
 ---
 
-## Typical use cases
+## About HUMXUS
 
-- product and strategy reviews
-- technical architecture critique
-- executive memo synthesis
-- due diligence and decision support
-- multi-perspective analysis of proposals
-
----
-
-## Notes
-
-- The implementation is optimized for Google Gemini models.
-- Fallback model handling is included to reduce disruption from temporary API saturation.
-- The ADK version uses a graph-based workflow with parallel debate branches before the final synthesis step.
-
----
-
-## License
-
-This project is provided as a local workspace utility for structured AI-based analysis. Use and adapt it according to your environment and operating constraints.
+This project is maintained by [HUMXUS](https://www.humxus.com/), an independent AI advisory practice by Javier Ferrer focused on enterprise AI governance, due diligence, and vendor-neutral decision architectures.
